@@ -63,8 +63,13 @@ class AppleBackend(GPUBackend):
         if not output:
             return None
 
-        # Parse GPU active residency percentage
-        # Example: "GPU active residency:  34.56%"
+        # Parse GPU HW active residency percentage (M1-M5)
+        # Example: "GPU HW active residency:  35.34%"
+        match = re.search(r"GPU HW active residency:\s+([\d.]+)%", output)
+        if match:
+            return float(match.group(1))
+
+        # Fallback: older pattern
         match = re.search(r"GPU active residency:\s+([\d.]+)%", output)
         if match:
             return float(match.group(1))
